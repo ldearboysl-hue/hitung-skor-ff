@@ -22,7 +22,6 @@ uploaded_files = st.file_uploader(
 if uploaded_files:
     st.info(f"Terdeteksi {len(uploaded_files)} foto berhasil di-upload.")
     
-    # Gunakan tombol eksekusi
     if st.button("🚀 Mulai Hitung Poin", type="primary"):
         try:
             genai.configure(api_key=api_key)
@@ -43,24 +42,13 @@ if uploaded_files:
             Format Kolom Tabel: Posisi, Nama Tim / Pemain, Total Kill, Total Poin.
             """
             
-            with st.spinner("Sedang memproses gambar dan menghitung poin (mohon tunggu beberapa detik)..."):
+            with st.spinner("Sedang memproses gambar dan menghitung poin..."):
                 response = model.generate_content([prompt, *images])
-                
-                # Simpan hasil ke session state agar tidak hilang
                 st.session_state['hasil_klasemen'] = response.text
                 
         except Exception as e:
             st.error(f"Terjadi kesalahan saat memproses: {e}")
 
-# Tampilkan hasil jika sudah dihitung
 if 'hasil_klasemen' in st.session_state:
     st.success("Perhitungan Selesai!")
     st.markdown(st.session_state['hasil_klasemen'])
-            """
-            
-            with st.spinner("Sedang memproses gambar dan menghitung poin..."):
-                response = model.generate_content([prompt, *images])
-                st.markdown(response.text)
-                st.success("Perhitungan selesai!")
-        except Exception as e:
-            st.error(f"Terjadi kesalahan: {e}")
