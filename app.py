@@ -6,12 +6,12 @@ st.set_page_config(page_title="Hitung Skor FF", layout="centered")
 st.title("🏆 Rekap Skor Turnamen Free Fire")
 st.write("Upload screenshot hasil match untuk membuat klasemen otomatis!")
 
-# Check API Key
-if "GEMINI_API_KEY" not in st.secrets:
-    st.error("⚠️ Error: GEMINI_API_KEY belum dimasukkan ke Secrets Streamlit!")
+# Ambil API Key dari Secrets Streamlit
+try:
+    api_key = st.secrets["GEMINI_API_KEY"]
+except Exception:
+    st.error("⚠️ GEMINI_API_KEY belum terpasang di Secrets Streamlit!")
     st.stop()
-
-api_key = st.secrets["GEMINI_API_KEY"]
 
 uploaded_files = st.file_uploader(
     "Upload Foto Screenshot Match (Bisa Banyak)", 
@@ -19,10 +19,11 @@ uploaded_files = st.file_uploader(
     accept_multiple_files=True
 )
 
-if uploaded_files:
-    st.info(f"📁 Terdeteksi {len(uploaded_files)} foto berhasil di-upload.")
-    
-    if st.button("🚀 Mulai Hitung Poin", type="primary"):
+# Tombol selalu muncul di bawah area upload
+if st.button("🚀 Mulai Hitung Poin", type="primary", use_container_width=True):
+    if not uploaded_files:
+        st.warning("Silakan upload minimal 1 foto screenshot match terlebih dahulu!")
+    else:
         with st.spinner("Sedang memproses gambar dan menghitung poin... Mohon tunggu 5-10 detik..."):
             try:
                 genai.configure(api_key=api_key)
@@ -53,6 +54,8 @@ if uploaded_files:
             except Exception as e:
                 st.error(f"❌ Terjadi kesalahan saat menghitung: {e}")
 
+# Tampilkan Hasil Perhitungan
 if 'hasil_klasemen' in st.session_state:
+    st.divider()
     st.success("🎉 Perhitungan Selesai!")
     st.markdown(st.session_state['hasil_klasemen'])
