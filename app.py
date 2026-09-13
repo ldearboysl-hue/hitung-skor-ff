@@ -67,16 +67,6 @@ if uploaded_files:
 if 'hasil_klasemen' in st.session_state:
     st.success("🎉 Perhitungan Selesai!")
     st.markdown(st.session_state['hasil_klasemen'])
-            - Placement Poin: #1=12, #2=9, #3=8, #4=7, #5=6, #6=5, #7=4, #8=3, #9=2, #10=1.
-            - Kill Poin: 1 kill = 1 poin.
-            
-            Tampilkan HANYA 1 Tabel Klasemen Total Akhir dari akumulasi seluruh match gambar yang di-upload.
-            Urutkan dari peringkat 1 (poin tertinggi).
-            Format Kolom Tabel: Posisi, Nama Tim / Pemain, Total Kill, Total Poin.
-            """
-            
-            with st.spinner("Sedang memproses gambar dan menghitung poin..."):
-                response = model.generate_content([prompt, *images])
                 st.session_state['hasil_klasemen'] = response.text
                 
         except Exception as e:
